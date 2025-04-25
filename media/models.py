@@ -3,11 +3,19 @@ from django.db import models
 # Create your models here.
 from django.conf import settings # Add this line to the the bottom of the imports 
 
+media_type=[
+    ("Movies", "Movies"),
+    ("TV series", "TV series"),
+    ("Anime", "Anime")
+
+
+]
 class Media(models.Model):
     title = models.CharField(max_length=250)
     released = models.DateField(auto_now=False, auto_now_add=False)
-    certificate = models.CharField(max_length=3)
-    duration = models.DurationField()
+    #certificate = models.CharField(max_length=3)
+    #duration = models.DurationField()
+    Type = models.CharField(max_length=10, choices=media_type)
     genre = models.CharField(max_length=100)
     director = models.CharField(max_length=250)
     star1 = models.CharField(max_length=250)
