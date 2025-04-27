@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media List</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
+
+
     <h1>MAL</h1>
     <hr>
     {% for item in media %}
-        <a href="{% url 'media:m_detail' item.pk %}">{{ item.title }}</a><br>
+        <a href="{% url 'media:m_detail' item.pk %}">{{ item.title }}</a>
     {% endfor %}
-</body>
-</html>
+
+
+
+{% endblock content %}
