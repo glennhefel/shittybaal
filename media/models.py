@@ -28,7 +28,7 @@ class Media(models.Model):
     #star3 = models.CharField(max_length=250)
     #star4 = models.CharField(max_length=250)
     #overview = models.TextField(max_length=1000)
-    #poster = models.URLField(max_length=200)
+    poster = models.URLField(max_length=500)
 
     def __str__(self):
         return self.title

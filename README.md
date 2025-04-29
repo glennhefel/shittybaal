@@ -13,7 +13,7 @@
 
 python manage.py createsuperuser
 
-user - admin
+user - user
 password - password
 
 
