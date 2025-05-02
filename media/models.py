@@ -11,6 +11,7 @@ media_li=[
 
 genre_li=[
     ("action","action"),
+    #("psychological","psychological"), ("comedy","comedy"), ("romance","romance"), ("sci-fi cyberpunk","sci-fi cyberpunk"), 
 
 
 ]
