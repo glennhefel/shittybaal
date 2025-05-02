@@ -9,6 +9,7 @@ app_name = 'media'
 urlpatterns = [
     path("", homepage, name="homepage"),
     path("media/<int:pk>/", media_detail, name="m_detail"),
-    path("add_media/", add_media, name="add_media"),
+    #path("add_media/", add_media, name="add_media"),
+    path("add_reviews/", add_reviews, name="add_reviews"),
     
 ]
