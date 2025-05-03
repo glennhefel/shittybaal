@@ -41,9 +41,18 @@ def homepage(request):
     return render(request, "media/homepage.html", context)
 
 
+# def media_detail(request, pk):  
+#     media = get_object_or_404(Media, pk=pk)
+#     context = {"media": media}
+#     return render(request, "media/m_details.html", context)
+
 def media_detail(request, pk):  
     media = get_object_or_404(Media, pk=pk)
-    context = {"media": media}
+    average_rating = media.average_rating  # This uses the property you defined in the model
+    context = {
+        "media": media,
+        "average_rating": average_rating,
+    }
     return render(request, "media/m_details.html", context)
 
 

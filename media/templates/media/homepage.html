@@ -13,13 +13,9 @@
       <div class="card" style="min-height: 450px;">
         <img src="{{item.poster}}" class="card-img-top" height="300px" , weight="200px" >
         <div class="card-body">
-
         <h4>
-
-            <i class="bi bi-star-fill text-warning"></i> </i> <span class="me-5"></span>
-
-            <i class="bi bi-star-half text-primary"></i>
-
+            <i class="bi bi-star-fill text-warning"></i> 
+            {{ item.average_rating|floatformat:1|default:"N/A" }}
         </h4>
 
         <a href="{% url 'media:m_detail' item.pk %}">{{ item.title }}</a>

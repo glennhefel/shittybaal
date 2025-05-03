@@ -11,8 +11,8 @@
         <h1 class="movie-title">{{ media.title }}</h1>
         
         <div class="movie-meta">
-            <span class="release-year">{{ media.release_date|date:"Y" }}</span>
-            <span class="rating">★ {{ media.rating|default:"N/A" }}</span>
+            <span class="release-year">{{ media.released|date:"Y" }}</span>
+            <span class="rating">★ {{ average_rating|floatformat:1|default:"N/A" }}</span> 
         </div>
         
         <div class="movie-info">
