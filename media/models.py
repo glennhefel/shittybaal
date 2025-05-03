@@ -45,4 +45,4 @@ class Rating(models.Model):
     rating = models.IntegerField()
 
     def __str__(self):
-        return f"{self.film} - {self.user}"
+        return f"{self.media} - {self.user}"
