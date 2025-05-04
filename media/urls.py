@@ -1,8 +1,11 @@
 from django.urls import path, include
 from django.contrib import admin
 
+from . views import homepage, media_detail, add_reviews, top100
+# add_media 
+
 from media.views import *
-#from .views import add_media, homepage, media_detail
+#afrom .views import add_media, homepage, media_detail
 
 app_name = 'media'
 
@@ -11,5 +14,6 @@ urlpatterns = [
     path("media/<int:pk>/", media_detail, name="m_detail"),
     #path("add_media/", add_media, name="add_media"),
     path("add_reviews/", add_reviews, name="add_reviews"),
+    path("top100/", top100, name="top100"),
     
 ]

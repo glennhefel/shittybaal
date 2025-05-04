@@ -12,7 +12,7 @@
         
         <div class="movie-meta">
             <span class="release-year">{{ media.released|date:"Y" }}</span>
-            <span class="rating">★ {{ average_rating|floatformat:1|default:"N/A" }}</span> 
+            <span class="rating">★ {{ average_rating|floatformat:1|default:"N/A" }}/10  - reviews: {{ media.total_votes }}</span>
         </div>
         
         <div class="movie-info">

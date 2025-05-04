@@ -38,6 +38,9 @@ class Media(models.Model):
     def average_rating(self):
         return self.ratings.all().aggregate(models.Avg('rating')).get('rating__avg',0.0)
     
+    @property
+    def total_votes(self):
+        return self.ratings.all().aggregate(models.Count('rating')).get('rating__count',0)
     
 class Rating(models.Model):
     media = models.ForeignKey(Media, on_delete=models.CASCADE, related_name='ratings')

@@ -1,7 +1,7 @@
 from random import randint  
 
 from django.shortcuts import redirect, render, get_object_or_404
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from .models import Media, Rating
 import os, json
 from datetime import timedelta
@@ -9,7 +9,6 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 # Create your views here.
-
 
 module_dir = os.path.dirname(__file__) # get current directory
 
@@ -40,12 +39,6 @@ def homepage(request):
     context = {"media":media}
     return render(request, "media/homepage.html", context)
 
-
-# def media_detail(request, pk):  
-#     media = get_object_or_404(Media, pk=pk)
-#     context = {"media": media}
-#     return render(request, "media/m_details.html", context)
-
 def media_detail(request, pk):  
     media = get_object_or_404(Media, pk=pk)
     average_rating = media.average_rating  # This uses the property you defined in the model
@@ -55,6 +48,20 @@ def media_detail(request, pk):
     }
     return render(request, "media/m_details.html", context)
 
+# def top100(request):
+#     media = Media.objects.annotate(avr=Avg("ratings__rating").order_by("-avr")[0:100])
+#     context = {"media":media}
+#     return render(request, "media/homepage.html", context)
+
+
+
+def top100(request):
+    media = Media.objects.annotate(
+        avr=Avg("ratings__rating"), votes=Count("ratings__ratings")  # First calculate average rating
+    ).order_by("-avr")[:100]  # Then sort by average and take top 100
+    
+    context = {"media": media}
+    return render(request, "media/homepage.html", context)
 
 def add_reviews(request):
     for j in range(0,10000):
