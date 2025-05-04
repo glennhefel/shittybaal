@@ -1,38 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Declares the document type as HTML5 and sets the language to English -->
-
 <head>
     <meta charset="UTF-8">
-    <!-- Sets the character encoding to UTF-8 (supports most characters) -->
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Ensures proper scaling on all devices (responsive design) -->
-
-    <title>Document</title>
-    <!-- The title shown in the browser tab -->
-
-    <!-- Link to Bootstrap 5.3.5 CSS from a CDN (Content Delivery Network) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" 
-          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" 
-          crossorigin="anonymous">
-
-    <!-- Link to Bootstrap Icons library -->
+    <title>Stream Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .stream-nav {
+            padding: 0.8rem 0;
+            background-color: #0f0f0f;
+            border-bottom: 1px solid #333;
+        }
+        .stream-nav .nav-link {
+            padding: 0.5rem 1.5rem;
+            font-size: 1.05rem;
+            color: #e0e0e0;
+            transition: all 0.2s ease;
+        }
+        .stream-nav .nav-link:hover {
+            color: #fff;
+            transform: scale(1.05);
+        }
+        .stream-nav .nav-link.active {
+            color: #00a8ff;
+            font-weight: 500;
+        }
+        .nav-icon {
+            font-size: 1.3rem;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Stream Navigation Bar -->
+    <nav class="navbar navbar-expand stream-nav">
+        <div class="container-fluid justify-content-center">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" title="Home">
+                        <i class="bi bi-house-door nav-icon"></i>Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="All Media">
+                        <i class="bi bi-collection-play nav-icon"></i>Media
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Top Content">
+                        <i class="bi bi-trophy nav-icon"></i>Top 100
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Account">
+                        <i class="bi bi-person nav-icon"></i>Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-    <div class="container"></div>
-    <!-- Empty Bootstrap container (used to center and add padding to content) -->
+    <div class="container mt-4">
+        {% block content %} {% endblock content %}
+    </div>
 
-    {% block content %} {% endblock content %}
-    <!-- Django/Jinja templating block: content from other templates will be inserted here -->
-
-    <!-- Link to Bootstrap 5.3.5 JavaScript bundle (includes Popper for tooltips, dropdowns, etc.) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" 
-            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" 
-            crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
