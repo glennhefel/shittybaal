@@ -57,7 +57,8 @@ def media_detail(request, pk):
 
 def top100(request):
     media = Media.objects.annotate(
-        avr=Avg("ratings__rating"), votes=Count("ratings__ratings")  # First calculate average rating
+        avr=Avg("ratings__rating"), 
+        votes=Count("ratings__rating")  # First calculate average rating
     ).order_by("-avr")[:100]  # Then sort by average and take top 100
     
     context = {"media": media}
