@@ -35,7 +35,7 @@ module_dir = os.path.dirname(__file__) # get current directory
 
 
 def homepage(request):
-    media = Media.objects.all()
+    media = Media.objects.all().order_by("-id")
     context = {"media":media}
     return render(request, "media/homepage.html", context)
 
