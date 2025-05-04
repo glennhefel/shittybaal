@@ -31,35 +31,62 @@
             vertical-align: middle;
             margin-right: 8px;
         }
+        .navbar-expand .navbar-nav {
+            align-items: center;
+        }
+        .logout-btn {
+            background: none;
+            border: 1px solid #ffc107;
+            color: #ffc107;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 193, 7, 0.1);
+        }
     </style>
 </head>
 
 <body data-bs-theme="dark">
     <!-- Stream Navigation Bar -->
     <nav class="navbar navbar-expand stream-nav">
-        <div class="container-fluid justify-content-center">
-            <ul class="navbar-nav">
+        <div class="container-fluid">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link active" href="/" title="Home">
                         <i class="bi bi-house-door nav-icon"></i>Home
                     </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="/media" title="All Media">
-                        <i class="bi bi-collection-play nav-icon"></i>Media
-                    </a>
-                </li> -->
                 <li class="nav-item">
                     <a class="nav-link" href="/top100" title="Top Content">
                         <i class="bi bi-trophy nav-icon"></i>Top 100
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login" title="Account">
-                        <i class="bi bi-person nav-icon"></i>Login
-                    </a>
-                </li>
             </ul>
+            
+            <div class="d-flex align-items-center">
+                <form class="d-flex me-3" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                
+                {% if request.user.is_authenticated %}
+                    <div class="d-flex align-items-center">
+                        <span class="text-light me-2">Welcome, {{ request.user.username }}</span>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-btn">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <a class="btn btn-outline-warning" href="{% url 'login' %}">
+                        <i class="bi bi-person"></i> Login
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
@@ -90,5 +117,3 @@
     </script>
 </body>
 </html>
-
-
