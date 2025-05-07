@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from . import views
 urlpatterns = [
     # ... your existing patterns ...
     path('login/', auth_views.LoginView.as_view(), name='login'),
@@ -22,5 +22,6 @@ urlpatterns = [
     #path("add_media/", add_media, name="add_media"),
     path("add_reviews/", add_reviews, name="add_reviews"),
     path("top100/", top100, name="top100"),
+    path("media/vote/<int:rating_id>/<str:action>/", views.vote_review, name='vote_review'),
 
 ]

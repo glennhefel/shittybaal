@@ -11,23 +11,127 @@
         <h1 class="movie-title">{{ media.title }}</h1>
         
         <div class="movie-meta">
-            <span class="release-year">{{ media.released|date:"Y" }}</span>
+            <span class="release-year">{{ media.release_date|date:"Y" }}</span>
             <span class="rating">★ {{ average_rating|floatformat:1|default:"N/A" }}/10  - reviews: {{ media.total_votes }}</span>
+            
         </div>
+
+        <!--Kuro_button-->
+        {% if user_reviewed %}
         
-        <div class="movie-info">
+        <button class="btn btn-secondary" > Bruh </button>
+        {% else %}
+        <button id="addReviewBtn" class="btn btn-outline-primary btn-sm mb-3 px-3 py-2 rounded">
+            Add a review...
+          </button>
+        
+        {% endif %}
+
+<div class="movie-description">
+    <h4>Synopsis</h4>
+    <br>
+        <p>{{ media.description }}</p>
+    </div>
+
+</div>
+
+<!--Kuro_modal-->
+<div id="reviewModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+  <div style="background:rgb(20, 16, 16); padding:20px; width:400px; margin:100px auto; border-radius:10px; position:relative;">
+    <h3 class="display-4 mb-4 text-center">Write a review</h3>
+    <form method="post" action="#">
+      {% csrf_token %}
+      
+      <label for="rating" class="form-label">Rating (1-10):</label>
+      <input type="number" id="rating" name="rating" min="1" max="10" required class="form-control mb-3" style="width: 80px;"">
+
+      <label for="comment" class="form-label">Comment:</label>
+      <textarea id="comment" name="comment" rows="4" cols="40" class="form-control mb-3"></textarea>
+
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-success btn-sm">
+          Submit
+        </button>
+        <button type="button" id="closeModal" class="btn btn-outline-secondary btn-sm ml-2">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById("addReviewBtn");
+  const modal = document.getElementById("reviewModal");
+  const close = document.getElementById("closeModal");
+
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+
+  close.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(e) {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+        
+    <div class="movie-info">
             <p><strong>Director:</strong> {{ media.director }}</p>
             <p><strong>Genre:</strong> {{ media.genre }}</p>
             <p><strong>Release Date:</strong> {{ media.release_date }}</p>
         </div>
         
         {% if media.description %}
-        <div class="movie-description">
-            <h3>Overview</h3>
-            <p>{{ media.description }}</p>
+        <div class="mt-4">
+                
         </div>
+      {% endif %}
+</div>
+<!--Black_Kuro-->
+<div class="mt-5">
+    <h4>User Reviews</h4>
+    {% for review in reviews %}
+        <div class="border rounded p-3 my-3 shadow-sm">
+            <strong>{{ review.user.username }}</strong> rated it 
+            <span class="badge bg-warning text-dark">{{ review.rating }}/10★</span><br>
+            {% if review.user == request.user %}
+            <div>
+                <!-- Show Edit Button -->
+                <button id="addReviewBtn" class="btn btn-outline-primary btn-sm mb-3 px-3 py-2 rounded">Edit</button>
+            </div>
         {% endif %}
-    </div>
+
+            {% if review.comment == "(This guy wrote nothing)" %}
+        <p style="color: grey; font-style: italic;">{{ review.comment }}</p>
+             {% else %}
+              <p class="mt-2">{{ review.comment|linebreaks }}</p>
+            {% endif %}
+        
+            <div class="d-flex gap-3 align-items-center mt-2">
+                <form method="post" action="{% url 'media:vote_review' review.id 'up' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm {% if review.user_vote and review.user_vote.vote_type == 'up' %}btn-success{% else %}btn-outline-success{% endif %}">
+                        👍 {{ review.upvotes }}
+                    </button>
+                </form>
+            
+                <form method="post" action="{% url 'media:vote_review' review.id 'down' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm {% if review.user_vote and review.user_vote.vote_type == 'down' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                        👎 {{ review.downvotes }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No reviews yet.</p>
+    {% endfor %}
+
 </div>
 
 <style>
@@ -71,6 +175,7 @@
         color: #666;
     }
     
+    
     .release-year {
         font-size: 1.2rem;
     }
@@ -92,6 +197,7 @@
         font-size: 1.1rem;
         color: #444;
     }
+    
     
     .movie-info strong {
         color: #333;
