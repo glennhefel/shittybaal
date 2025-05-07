@@ -2,12 +2,16 @@ from random import randint
 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Avg, Count
-from .models import Media, Rating
+from .models import Media, Rating , Hanekawa #Kuro
 import os, json
 from datetime import timedelta
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponseBadRequest #Kuro
+
 # Create your views here.
 
 module_dir = os.path.dirname(__file__) # get current directory
@@ -39,14 +43,40 @@ def homepage(request):
     context = {"media":media}
     return render(request, "media/homepage.html", context)
 
-def media_detail(request, pk):  
+def media_detail(request, pk):
     media = get_object_or_404(Media, pk=pk)
-    average_rating = media.average_rating  # This uses the property you defined in the model
+    ###Kuro
+    user_reviewed = Rating.objects.filter(user=request.user, media=media).exists()
+    # (new review submission)
+    if request.method == "POST":
+        rating_val = int(request.POST.get("rating"))
+        comment_text = request.POST.get("comment", "").strip()
+        if not comment_text:
+          comment_text = "(This guy wrote nothing)"
+
+        user = request.user
+
+        # Save or update rating
+        Rating.objects.update_or_create(
+            media=media,
+            user=user,
+            defaults={"rating": rating_val, "comment": comment_text},
+        )
+        return redirect("media:m_detail", pk=pk)  # reload the page after submit
+
+    average_rating = media.average_rating
+    reviews = Rating.objects.filter(media=media).select_related("user").order_by("-id")
+    #Kuro
+    for review in reviews:
+        review.user_vote = Hanekawa.objects.filter(user=request.user, rating=review).first()
+
     context = {
         "media": media,
         "average_rating": average_rating,
+        "reviews": reviews,
     }
     return render(request, "media/m_details.html", context)
+##Kuro
 
 # def top100(request):
 #     media = Media.objects.annotate(avr=Avg("ratings__rating").order_by("-avr")[0:100])
@@ -79,8 +109,51 @@ def add_rev(g_media, g_user, g_rating):
         user = get_object_or_404(User, pk=g_user),
         rating = g_rating,
     )
+#Kuro#####
+@require_POST   
+@login_required
+def vote_review(request, rating_id, action):
+    if action not in ["up", "down"]:
+        return HttpResponseBadRequest("Invalid action")
 
-    
+    rating = get_object_or_404(Rating, id=rating_id)
+    user = request.user
+
+    existing_vote = Hanekawa.objects.filter(user=user, rating=rating).first()
+
+    # Remove previous vote
+    if existing_vote:
+        if existing_vote.vote_type == action:
+            # Toggle: same vote clicked again, remove it
+            existing_vote.delete()
+            if action == "up":
+                rating.upvotes -= 1
+            else:
+                rating.downvotes -= 1
+        else:
+            # Switch vote
+            if existing_vote.vote_type == "up":
+                rating.upvotes -= 1
+                rating.downvotes += 1
+            else:
+                rating.downvotes -= 1
+                rating.upvotes += 1
+            existing_vote.vote_type = action
+            existing_vote.save()
+    else:
+        # New vote
+        Hanekawa.objects.create(user=user, rating=rating, vote_type=action)
+        if action == "up":
+            rating.upvotes += 1
+        else:
+            rating.downvotes += 1
+
+    rating.save()
+    return redirect(request.META.get("HTTP_REFERER", "media:index"))
+#Kurooo
+class edit_review():
+    pass
+#     
 # def top250(request):
 #     films = Film.objects.annotate(avr=Avg("ratings__rating"), votes=Count("ratings__rating")).order_by("-avr")[0:250]
 #     paginator = Paginator(films, 10)
